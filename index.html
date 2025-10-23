@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILE CLASSIFICATO: RAPPORTO CASO ORIENTALE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* COLORE BASE CARABINIERI + VHS */
+        :root {
+            --carabinieri-blue: #001C46; /* Blu notte istituzionale */
+            --vhs-yellow: #ffff66; /* Giallo/Oro VHS */
+            --vhs-red: #ff004c; /* Rosso VHS per allerta */
+        }
+
+        /* Tipografia e Colori Base */
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--carabinieri-blue); 
+            color: var(--vhs-yellow); 
+            padding: 10px;
+        }
+
+        /* 1. Effetto Flicker (Leggero) */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.995; } /* Molto discreto */
+        }
+        body {
+            animation: flicker 0.5s infinite alternate; 
+        }
+
+        /* 2. Scanlines (Linee Orizzontali) - Mantenuto per il contesto VHS */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 1px,
+                rgba(0, 0, 0, 0.4) 2px, 
+                rgba(0, 0, 0, 0.4) 3px
+            );
+            opacity: 0.6; 
+            z-index: 1000;
+        }
+        
+        /* 3. Effetto CRT Glow (Luminescenza) */
+        .vhs-glow {
+            text-shadow: 0 0 5px var(--vhs-yellow), 0 0 10px rgba(255, 255, 102, 0.5); 
+        }
+        
+        /* 3b. Testo Criptico Aggiunto (Rosso e intermittente) */
+        .cryptic-message {
+            color: var(--vhs-red); 
+            text-shadow: 0 0 5px var(--vhs-red);
+            font-size: 1.25rem; /* text-xl */
+            margin-top: 2rem;
+            animation: pulse-red 1.5s infinite alternate;
+        }
+
+        @keyframes pulse-red {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+
+        /* 4. Barra VHS in alto (Data, Ora, Contatore) */
+        .vhs-bar {
+            background-color: var(--carabinieri-blue);
+            border-bottom: 2px solid var(--vhs-yellow);
+            padding: 5px 0;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+        .vhs-rec {
+            color: var(--vhs-red); 
+            text-shadow: 0 0 5px var(--vhs-red);
+        }
+        
+        /* Blocco Informazioni (Simula il modulo istituzionale) */
+        .info-block {
+            border: 3px solid var(--vhs-yellow); 
+            padding: 1rem; /* Adattato per Mobile */
+            margin-bottom: 1.5rem; /* Adattato per Mobile */
+            background-color: rgba(0, 28, 70, 0.8);
+            box-shadow: 0 0 10px rgba(255, 255, 102, 0.7); 
+        }
+        
+        /* Testo di Allerta / Classificato */
+        .alert-text {
+            color: var(--vhs-red); 
+            text-shadow: 0 0 5px var(--vhs-red), 0 0 10px rgba(255, 0, 76, 0.5); 
+        }
+        
+        /* Titolazione Stile Report */
+        .report-header {
+            background-color: rgba(255, 255, 102, 0.1);
+            border-bottom: 1px solid var(--vhs-yellow);
+            padding: 0.5rem 0;
+            margin-bottom: 0.5rem; /* Adattato per Mobile */
+            text-align: center;
+        }
+
+        /* Stile Immagini (per simulare il feed video) */
+        .image-feed {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            display: block;
+            /* Filtro per simulare la qualità VHS */
+            filter: brightness(1.2) contrast(1.1) saturate(1.1);
+        }
+
+        /* Contenitore Immagine Martina: adattamento per centratura e dimensioni */
+        #martina-photo-container {
+            width: 100%; /* Default Full Width su Mobile */
+            max-width: 256px; /* Limite per Desktop */
+            height: 256px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Desktop Adjustments */
+        @media (min-width: 640px) {
+            .info-block {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+            .report-header {
+                margin-bottom: 1rem;
+            }
+            /* Assicurare che la griglia a due colonne funzioni su schermi più grandi */
+            .data-grid {
+                 grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+
+        /* Rumore Statico Overlay (Visivo) */
+        #static-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAZlBMVEUAAAAxMzMvLy8xMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMxMzMh4Hk0AAAACHRSTlMAxMzMzMzMzMzMWgGgIwAAAAlwSFlzAAAASAAAAEgARslrPgAAAD5JREFUSMftzLkNAAAMBDHw1b4s/k/wF+Bdw+v6vG4C+PzD8w/PPzz/c/zP8T/P/xL/K/6r8r/r8b/78b/7/j/9n/9v/5//f/8f/3//H/8f/3/8b/j/+L/zf/b/7f/L/5//L/5f/L/5P+f/5//f/8f/3/8f/3/8f/3/8T/j/8T/j/+L/zf/L/5//b/8f/3/8T/j/8T/j/+L/zf/L/5//b/8f/3/8f/3/8f/3/8T/j/8T/j/+L/zf/L/5//b/8f/3/8T/j/8T/j/+L/zf/L/5/9v/5/9v/x/+P/4f/j/9X/q/w0T0W3rAAAAAElFTkSuQmCC");
+            background-repeat: repeat;
+            opacity: 0;
+            transition: opacity 0.1s;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+    </style>
+</head>
+<body class="p-4 sm:p-10 min-h-screen flex items-start justify-center">
+
+    <div id="main-content" class="w-full max-w-4xl">
+        
+        <div class="vhs-bar flex justify-between px-2 sm:px-4">
+            <span class="vhs-rec font-bold">● REC</span>
+            <span id="tape-counter">00:00:00</span>
+            <span id="timestamp">2025/10/23 09:12:53</span>
+        </div>
+
+        <div class="border-b-4 border-t-4 border-vhs-yellow pb-2 mb-6 sm:mb-8 mt-4">
+            <h1 class="text-xl sm:text-3xl vhs-glow text-center tracking-widest uppercase">
+                ARM-REPORT-93-02-B | RAPPORTO DI CLASSIFICAZIONE E SORVEGLIANZA
+            </h1>
+            <p class="text-xs sm:text-sm text-center italic mt-2 vhs-glow">(NON FATTO DA ANTOSKI NON TI PREOCCUPARE :3)</p>
+        </div>
+
+        <div class="info-block">
+            
+            <p class="text-sm mb-4 alert-text">RISERVATO. FORZE DI ARMA. SEZIONE ARCHIVI CRIPTICI.</p>
+
+            <div id="orientale-photo-container" class="w-full bg-black mb-6 flex flex-col items-center justify-center relative border-4 border-vhs-yellow p-1" style="height: auto;">
+                <img src="orientale.png" alt="Immagine dell'Università L'Orientale (orientale.png)" 
+                     class="image-feed w-full h-auto" 
+                     onerror="this.onerror=null; this.src='https://placehold.co/600x400/001C46/FFFF66?text=ORIENTALE+IMMAGINE+NON+TROVATA';"
+                     title="Immagine dell'Orientale">
+            </div>
+            
+            <div class="px-0 pt-4">
+                <h2 class="report-header text-lg font-bold uppercase">
+                    DATI BASE DELL'OBIETTIVO
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mt-4 data-grid">
+                    <p class="text-sm sm:text-base font-normal">
+                        **CODICE OPERAZIONE:** HOT-93-02-B
+                    </p>
+                    <p class="text-sm sm:text-base font-normal">
+                        **CATEGORIA:** Spazio Liminale
+                    </p>
+                    <p class="text-sm sm:text-base font-normal">
+                        **NOME STRUTTURA:** Cortile Dell'Università Dell'Orientale
+                    </p>
+                    <p class="text-sm sm:text-base font-normal">
+                        **GIURISDIZIONE:** Napoli, Italia
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-block alert-text border-vhs-red">
+            <h2 class="report-header text-lg sm:text-xl font-bold mb-4 uppercase">
+                SEZIONE 02: VALUTAZIONE DEGRADO AMBIENTALE
+            </h2>
+            <p class="text-sm sm:text-lg leading-relaxed">
+                **LOG OPERATIVO (TRASCRIZIONE IN CORSO):** L'ORIENTALE è UN POSTO DI RITROVO PER GIOVANI DROGATI E TOSSICI (NON TUTTI COSI GRAZIE A DIO) COME MARTINA AMENDOLA. è UN LUOGO CUPO E DEGRADATO SENZA SPERANZA E CHE SE VARCATO CAUSA FORTI DOLORI E REGREDIMENTO CELEBRALE E FISICO. OVVIAMENTE SOLO UNA DOWN COME MARTINA POTREBBE USARLO COME LUOVO DI RITROVO CON LE DOWN COME LEI.
+                (LIVELLO DI PERICOLO AMBIENTALE: **MEDIO - CLASSIFICAZIONE ROSSA**)
+            </p>
+        </div>
+
+        <div class="info-block alert-text border-vhs-red">
+            <h3 class="report-header text-lg sm:text-xl font-bold mb-2 uppercase">
+                SEZIONE 03: ANOMALIA / SOGGETTO CRIPTICO MARTINA AMENDOLA
+            </h3>
+            
+            <p class="text-center text-base sm:text-lg font-bold mt-4 uppercase">FOTO DI MARTINA</p>
+
+            <div id="martina-photo-container" class="h-64 w-64 bg-black mx-auto my-4 flex flex-col items-center justify-center relative border-4 border-vhs-red p-1">
+                 <img src="martina.png" alt="Immagine dell'Entità Criptica Martina Amendola (martina.png)" 
+                     class="image-feed" 
+                     onerror="this.onerror=null; this.src='https://placehold.co/256x256/46001C/FFFF66?text=TRACCIA+ENTITA+ASSENTE';"
+                     title="Immagine di Martina Amendola">
+            </div>
+
+            <p class="text-sm sm:text-lg">
+                **NOMINALE:** Martina Amendola (Soprannome di Riferimento: "Il Mostro dell'Orientale").
+            </p>
+            <p class="text-sm sm:text-lg leading-relaxed mt-2">
+                **ANALISI CRITTOGRAFICA (LIVELLO ZETA-9):** MARTINA è UN SOGGETTO INSTABILE E DISABILE A MORTE (è DOWN), MOSTRA SEGNI DI DISTURBO DI PERSONALITà E TRATTI DI ASPD. HA UN FORTE ODIO PER LE DOCCIE INFATTI NON SI LAVA AFFATTO E CERCA DI COPRIRE LA SUA PUZZA CON UNA BOCCIETTA INTERA DI PROFUMO. SOGGETTO ESTREMAMENTE STUPIDO E FACILE DA SFOTTERE. SE VI SCRIVE BLOCCARE IMMEDIATAMENTE E CONTATTARE IL CORPO DEI CARABINIERI LOCALI. SI PUò TROVARE ALL'ORIENTALE IL SABATO SERA INSIEME ALLE SUE SIMILI (RAFA) E SE VISTA CHIAMARE SUBITO I CARABINIERI E SE SI PUò PICCHIARLA O SPARARLA A VISTA. ATTENZIONE! POTREBBE ACCUSARVI DI VIOLENZA S*SSUALE
+            
+            <p class="cryptic-message text-center mt-6 p-2 border-2 border-vhs-red vhs-glow text-base sm:text-xl">
+                FAGLI GLI AUGURI! TUTTI GLIELI HANNO FATTI, MANCA SOLO LA SUA STALKER :(
+            </p>
+            
+        </div>
+        
+    </div>
+    
+    <div id="static-overlay"></div>
+
+    <script>
+        const tapeCounterElement = document.getElementById('tape-counter');
+        const timestampElement = document.getElementById('timestamp');
+        const staticOverlay = document.getElementById('static-overlay');
+
+        // Contatore Nastro (simulato)
+        let counter = 0;
+        function updateTapeCounter() {
+            counter++;
+            const seconds = counter % 60;
+            const minutes = Math.floor(counter / 60) % 60;
+            const hours = Math.floor(counter / 3600);
+            
+            const format = (n) => String(n).padStart(2, '0');
+            tapeCounterElement.textContent = `${format(hours)}:${format(minutes)}:${format(seconds)}`;
+        }
+
+        // Timestamp Dinamico
+        function updateTimestamp() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            timestampElement.textContent = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+        }
+        
+        // Funzione per attivare e disattivare l'interferenza VISUALE (Lost Footage)
+        function triggerGlitch() {
+            // Probabilità di glitch visivo
+            if (Math.random() < 0.4) { 
+                // NESSUNO SHAKE FISICO. Solo rumore visivo.
+                staticOverlay.style.opacity = '0.6'; 
+                
+                // Durata breve per effetto glitch
+                setTimeout(() => {
+                    staticOverlay.style.opacity = '0';
+                }, 80); 
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Aggiorna l'orario iniziale con l'orario corrente.
+            const initialDate = new Date();
+            const year = initialDate.getFullYear();
+            const month = String(initialDate.getMonth() + 1).padStart(2, '0');
+            const day = String(initialDate.getDate()).padStart(2, '0');
+            const hours = String(initialDate.getHours()).padStart(2, '0');
+            const minutes = String(initialDate.getMinutes()).padStart(2, '0');
+            const seconds = String(initialDate.getSeconds()).padStart(2, '0');
+            timestampElement.textContent = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+
+            // Setta gli intervalli
+            setInterval(updateTimestamp, 1000);
+            setInterval(updateTapeCounter, 1000); 
+            
+            // Attiva il glitch visivo ad intervalli semi-casuali 
+            setInterval(triggerGlitch, 50 + Math.random() * 300); 
+
+            console.log("Sistema di Tracciamento ARM-REPORT Attivo.");
+        });
+    </script>
+</body>
+</html>
